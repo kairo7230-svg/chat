@@ -1,27 +1,37 @@
+// 1. Force Node.js to use Google's Public DNS to bypass cellular/ISP blocking
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '8.8.4.4']); 
+
+// 2. Load Environment Variables and Dependencies
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-// require('body-parser') is no longer strictly necessary, but perfectly fine if kept!
 
+// 3. Connect to Database (Now running smoothly using Google DNS)
 require('./Models/db.js');
+
 const authRouter = require('./routes/authRoutes.js');
-const productRouter = require('./routes/productRouter.js');
+const friendRouter = require('./routes/friendRouter.js');
 const app = express();
-const PORT = process.env.PORT || 9000; // Cleaned up the double semicolon
+const PORT = process.env.PORT || 9000;
 
-// 1. Middleware
+// 4. Middleware
 app.use(cors());
-app.use(express.json()); // Built-in alternative to bodyParser.json()
+app.use(express.json());
 
-// 2. Routes
+// 5. Routes
 app.use('/auth', authRouter);
-app.use('/product', productRouter);
+app.use('/friends', friendRouter);
 
 app.get('/', (req, res) => {
     res.send("yh");
 });
 
-// 3. Start Server
-app.listen(PORT, () => {
-    console.log(`server started on ${PORT}`);
-});
+// 6. Start Server
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`server started on ${PORT}`);
+    });
+}
+
+module.exports = app;

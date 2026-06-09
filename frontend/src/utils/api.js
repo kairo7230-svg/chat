@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:9000';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:9000';
 
 const getToken = () => localStorage.getItem('authToken');
 
@@ -30,10 +30,56 @@ export const loginRequest = async (payload) => {
   });
 };
 
-export const fetchProducts = async () => {
-  return fetch(`${BASE_URL}/product`, {
+export const fetchFriends = async () => {
+  return fetch(`${BASE_URL}/friends/list`, {
     method: 'GET',
-    headers: getHeaders(false)
+    headers: getHeaders()
+  });
+};
+
+export const fetchFriendRequests = async () => {
+  return fetch(`${BASE_URL}/friends/requests`, {
+    method: 'GET',
+    headers: getHeaders()
+  });
+};
+
+export const sendFriendRequest = async (email) => {
+  return fetch(`${BASE_URL}/friends/request/send`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ email })
+  });
+};
+
+export const acceptFriendRequest = async (senderId) => {
+  return fetch(`${BASE_URL}/friends/request/accept`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ senderId })
+  });
+};
+
+export const declineFriendRequest = async (senderId) => {
+  return fetch(`${BASE_URL}/friends/request/decline`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ senderId })
+  });
+};
+
+export const fetchChats = async (friendId) => {
+  return fetch(`${BASE_URL}/friends/chats/${friendId}`, {
+    method: 'GET',
+    headers: getHeaders()
+  });
+};
+
+export const sendMessage = async (friendId, message) => {
+  return fetch(`${BASE_URL}/friends/message/send`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ friendId, message })
   });
 };
 
