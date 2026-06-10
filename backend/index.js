@@ -1,6 +1,8 @@
-// 1. Force Node.js to use Google's Public DNS to bypass cellular/ISP blocking
-const dns = require('dns');
-dns.setServers(['8.8.8.8', '8.8.4.4']); 
+// 1. Force Node.js to use Google's Public DNS to bypass cellular/ISP blocking (local only)
+if (process.env.NODE_ENV !== 'production') {
+    const dns = require('dns');
+    dns.setServers(['8.8.8.8', '8.8.4.4']); 
+}
 
 // 2. Load Environment Variables and Dependencies
 require('dotenv').config();
